@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Knowledge Graph Extraction &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Parallel Knowledge Graph Generation" href="parralel_generation.html" />
+    <link rel="prev" title="Retrieval Augmentation" href="../guide/retrieval_augmentation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Custom Knowledge Graph Extraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-prompt">1. Creating a Custom Prompt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-schema">2. Creating a Custom Schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-custom-extraction">3. Running Custom Extraction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Custom Knowledge Graph Extraction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example/advance_features.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="custom-knowledge-graph-extraction">
+<h1>Custom Knowledge Graph Extraction<a class="headerlink" href="#custom-knowledge-graph-extraction" title="Link to this heading"></a></h1>
+<p>This guide demonstrates how to customize the knowledge graph extraction process using your own prompts and validation schemas. This allows you to define specific extraction rules, output formats, and structural constraints for your knowledge graph.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The custom extraction process involves three main components:</p>
+<ol class="arabic simple">
+<li><p><strong>Custom Prompt</strong>: Defines the instructions given to the LLM for extracting triples.</p></li>
+<li><p><strong>Custom Schema</strong>: Defines the JSON schema used to validate the extracted triples.</p></li>
+<li><p><strong>Extraction Script</strong>: Configures the <code class="docutils literal notranslate"><span class="pre">KnowledgeGraphExtractor</span></code> to use your custom files.</p></li>
+</ol>
+</section>
+<section id="creating-a-custom-prompt">
+<h2>1. Creating a Custom Prompt<a class="headerlink" href="#creating-a-custom-prompt" title="Link to this heading"></a></h2>
+<p>Create a JSON file (e.g., <code class="docutils literal notranslate"><span class="pre">custom_prompt.json</span></code>) to define your extraction prompts. The file should support language keys (like <code class="docutils literal notranslate"><span class="pre">&quot;en&quot;</span></code>) and contain specific instructions for the system and the extraction tasks.</p>
+<p>You can define multiple keys (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;triple_extraction&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;time_extraction&quot;</span></code>) to represent different stages of extraction. The system will iterate through each key and perform the corresponding extraction task.</p>
+<p><strong>Example <code class="docutils literal notranslate"><span class="pre">custom_prompt.json</span></code>:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;en&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;system&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;You are a helpful assistant&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;triple_extraction&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;You are an expert knowledge graph constructor.\nYour task is to extract factual information from the provided text and represent it strictly as a ***JSON array*** of knowledge graph triples.\n\n### Output Format\n- The output must be a **JSON array**.\n- Each element in the array must be a **JSON object** with exactly three non-empty keys:\n  - \&quot;subject\&quot;: the main entity, concept, event, or attribute.\n  - \&quot;relation\&quot;: a concise, descriptive phrase or verb that describes the relationship.\n  - \&quot;object\&quot;: the entity, concept, value, event, or attribute that the subject has a relationship with.\n\n### Constraints\n- **Do not include any text other than the JSON output.**\n- Extract **all possible and relevant triples**.\n- If no triples can be extracted, return exactly: `[]`.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;time_extraction&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;You are an expert in temporal extraction...&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-a-custom-schema">
+<h2>2. Creating a Custom Schema<a class="headerlink" href="#creating-a-custom-schema" title="Link to this heading"></a></h2>
+<p>Create a JSON schema file (e.g., <code class="docutils literal notranslate"><span class="pre">custom_schema.json</span></code>) to enforce the structure of the extracted data. This ensures that the LLM output conforms to your expected format.</p>
+<p><strong>Important</strong>: If you defined multiple extraction keys in your <code class="docutils literal notranslate"><span class="pre">custom_prompt.json</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;triple_extraction&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;time_extraction&quot;</span></code>), you must provide a corresponding schema for <strong>each</strong> key in this file.</p>
+<p><strong>Example <code class="docutils literal notranslate"><span class="pre">custom_schema.json</span></code>:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;triple_extraction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;relation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;relation&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;time_extraction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="running-custom-extraction">
+<h2>3. Running Custom Extraction<a class="headerlink" href="#running-custom-extraction" title="Link to this heading"></a></h2>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">KnowledgeGraphExtractor</span></code> class with a <code class="docutils literal notranslate"><span class="pre">ProcessingConfig</span></code> that points to your custom prompt and schema files.</p>
+<p><strong>Example Script (<code class="docutils literal notranslate"><span class="pre">custom_kg_extraction.py</span></code>):</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_extraction</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeGraphExtractor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessingConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.llm_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="c1"># Initialize LLM</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://0.0.0.0:8129/v1&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;EMPTY&quot;</span><span class="p">)</span>
+<span class="n">triple_generator</span> <span class="o">=</span> <span class="n">LLMGenerator</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span><span class="p">)</span>
+
+<span class="c1"># Configure Extraction with Custom Files</span>
+<span class="n">kg_extraction_config</span> <span class="o">=</span> <span class="n">ProcessingConfig</span><span class="p">(</span>
+      <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span><span class="p">,</span>
+      <span class="n">data_directory</span><span class="o">=</span><span class="s2">&quot;benchmark_data&quot;</span><span class="p">,</span>
+      <span class="n">filename_pattern</span><span class="o">=</span><span class="s2">&quot;musique&quot;</span><span class="p">,</span>
+      <span class="n">output_directory</span><span class="o">=</span><span class="s2">&quot;example&quot;</span><span class="p">,</span>
+      <span class="n">triple_extraction_prompt_path</span><span class="o">=</span><span class="s1">&#39;example/example_scripts/custom_extraction/custom_benchmark/custom_prompt.json&#39;</span><span class="p">,</span> <span class="c1"># Path to your custom prompt</span>
+      <span class="n">triple_extraction_schema_path</span><span class="o">=</span><span class="s1">&#39;example/example_scripts/custom_extraction/custom_benchmark/custom_schema.json&#39;</span><span class="p">,</span> <span class="c1"># Path to your custom schema</span>
+<span class="p">)</span>
+
+<span class="c1"># Run Extraction</span>
+<span class="n">kg_extractor</span> <span class="o">=</span> <span class="n">KnowledgeGraphExtractor</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">triple_generator</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">kg_extraction_config</span><span class="p">)</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">run_extraction</span><span class="p">()</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">convert_json_to_csv</span><span class="p">()</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">convert_to_graphml</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../guide/retrieval_augmentation.html" class="btn btn-neutral float-left" title="Retrieval Augmentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parralel_generation.html" class="btn btn-neutral float-right" title="Parallel Knowledge Graph Generation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

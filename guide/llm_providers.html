@@ -1,0 +1,245 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Providers &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="File Formats &amp; Data Loading" href="file_formats.html" />
+    <link rel="prev" title="Quick Start" href="../intro/quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LLM Providers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#openai-compatible-apis">OpenAI-Compatible APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-local-vllm-server">Using Local vLLM Server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#azure-openai">Azure OpenAI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#native-local-models-huggingface-vllm-offline">Native Local Models (HuggingFace / vLLM Offline)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">LLM Providers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/llm_providers.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="llm-providers">
+<h1>LLM Providers<a class="headerlink" href="#llm-providers" title="Link to this heading"></a></h1>
+<p>AutoSchemaKG’s <code class="docutils literal notranslate"><span class="pre">LLMGenerator</span></code> is designed to be backend-agnostic, supporting various LLM providers through a unified interface. This allows you to switch between proprietary APIs (like OpenAI) and open-source models (via vLLM, HuggingFace, or other serving frameworks) with minimal code changes.</p>
+<section id="openai-compatible-apis">
+<h2>OpenAI-Compatible APIs<a class="headerlink" href="#openai-compatible-apis" title="Link to this heading"></a></h2>
+<p>The primary way to interface with LLMs is through the OpenAI-compatible API standard. This supports:</p>
+<ul class="simple">
+<li><p><strong>OpenAI</strong> (GPT-4, GPT-3.5)</p></li>
+<li><p><strong>DeepInfra</strong> (Llama 3, Mixtral, Qwen)</p></li>
+<li><p><strong>Together AI</strong></p></li>
+<li><p><strong>vLLM</strong> (running as a server)</p></li>
+<li><p><strong>LocalAI</strong> / <strong>Ollama</strong> / <strong>LiteLLM</strong></p></li>
+</ul>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>To use an OpenAI-compatible provider, initialize the <code class="docutils literal notranslate"><span class="pre">OpenAI</span></code> client with the appropriate <code class="docutils literal notranslate"><span class="pre">base_url</span></code> and <code class="docutils literal notranslate"><span class="pre">api_key</span></code>, then pass it to <code class="docutils literal notranslate"><span class="pre">LLMGenerator</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.llm_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGenerator</span><span class="p">,</span> <span class="n">GenerationConfig</span>
+
+<span class="c1"># 1. Configure Generation Parameters</span>
+<span class="n">gen_config</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
+    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="p">)</span>
+
+<span class="c1"># 2. Initialize Client (Example: DeepInfra)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.deepinfra.com/v1/openai&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;YOUR_API_KEY&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Initialize Generator</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">LLMGenerator</span><span class="p">(</span>
+    <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;meta-llama/Llama-3-70b-chat-hf&quot;</span><span class="p">,</span>
+    <span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Number of concurrent requests</span>
+    <span class="n">default_config</span><span class="o">=</span><span class="n">gen_config</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-local-vllm-server">
+<h3>Using Local vLLM Server<a class="headerlink" href="#using-local-vllm-server" title="Link to this heading"></a></h3>
+<p>You can run a local LLM using vLLM and connect to it as if it were an OpenAI API.</p>
+<ol class="arabic">
+<li><p><strong>Start vLLM Server:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>vllm.entrypoints.openai.api_server<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--model<span class="w"> </span>Qwen/Qwen2.5-7B-Instruct<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span><span class="m">8000</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Connect via Python:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/v1&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;EMPTY&quot;</span>  <span class="c1"># vLLM usually doesn&#39;t require a key locally</span>
+<span class="p">)</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">LLMGenerator</span><span class="p">(</span>
+    <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span><span class="p">,</span>
+    <span class="n">default_config</span><span class="o">=</span><span class="n">gen_config</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="azure-openai">
+<h2>Azure OpenAI<a class="headerlink" href="#azure-openai" title="Link to this heading"></a></h2>
+<p>For Azure OpenAI, use the <code class="docutils literal notranslate"><span class="pre">AzureOpenAI</span></code> client.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureOpenAI</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">AzureOpenAI</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;YOUR_AZURE_API_KEY&quot;</span><span class="p">,</span>
+    <span class="n">api_version</span><span class="o">=</span><span class="s2">&quot;2023-05-15&quot;</span><span class="p">,</span>
+    <span class="n">azure_endpoint</span><span class="o">=</span><span class="s2">&quot;https://your-resource.openai.azure.com&quot;</span>
+<span class="p">)</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">LLMGenerator</span><span class="p">(</span>
+    <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="c1"># Deployment name</span>
+    <span class="n">default_config</span><span class="o">=</span><span class="n">gen_config</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="native-local-models-huggingface-vllm-offline">
+<h2>Native Local Models (HuggingFace / vLLM Offline)<a class="headerlink" href="#native-local-models-huggingface-vllm-offline" title="Link to this heading"></a></h2>
+<p><em>Note: Direct support for offline <code class="docutils literal notranslate"><span class="pre">vLLM</span></code> or <code class="docutils literal notranslate"><span class="pre">HuggingFace</span></code> pipelines (without the API server) is supported via specific <code class="docutils literal notranslate"><span class="pre">LLMGenerator</span></code> subclasses or configurations. Ensure you have the necessary packages installed (<code class="docutils literal notranslate"><span class="pre">vllm</span></code>, <code class="docutils literal notranslate"><span class="pre">transformers</span></code>, <code class="docutils literal notranslate"><span class="pre">torch</span></code>).</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> class includes specific parameters for these backends:</p>
+<ul class="simple">
+<li><p><strong>vLLM</strong>: <code class="docutils literal notranslate"><span class="pre">min_p</span></code>, <code class="docutils literal notranslate"><span class="pre">use_beam_search</span></code>, <code class="docutils literal notranslate"><span class="pre">guided_json</span></code>, <code class="docutils literal notranslate"><span class="pre">guided_regex</span></code></p></li>
+<li><p><strong>HuggingFace</strong>: <code class="docutils literal notranslate"><span class="pre">repetition_penalty</span></code>, <code class="docutils literal notranslate"><span class="pre">truncation</span></code>, <code class="docutils literal notranslate"><span class="pre">padding</span></code></p></li>
+</ul>
+<p>Example of configuring backend-specific parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gen_config</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="c1"># vLLM specific</span>
+    <span class="n">min_p</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">guided_json</span><span class="o">=</span><span class="n">my_json_schema</span><span class="p">,</span>
+    <span class="c1"># HuggingFace specific</span>
+    <span class="n">repetition_penalty</span><span class="o">=</span><span class="mf">1.1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../intro/quickstart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="file_formats.html" class="btn btn-neutral float-right" title="File Formats &amp; Data Loading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

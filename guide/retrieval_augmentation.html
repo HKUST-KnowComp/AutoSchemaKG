@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retrieval Augmentation &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Custom Knowledge Graph Extraction" href="../example/advance_features.html" />
+    <link rel="prev" title="Vector Stores &amp; Embeddings" href="vectorstores.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrieval Augmentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#available-retrievers">Available Retrievers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simple-retrievers">1. Simple Retrievers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#simplegraphretriever"><code class="docutils literal notranslate"><span class="pre">SimpleGraphRetriever</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#simpletextretriever"><code class="docutils literal notranslate"><span class="pre">SimpleTextRetriever</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hipporag">2. HippoRAG</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hipporagretriever-hipporag2retriever"><code class="docutils literal notranslate"><span class="pre">HippoRAGRetriever</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">HippoRAG2Retriever</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#think-on-graph-tog">3. Think on Graph (ToG)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#togretriever-togv3retriever-turbo-version"><code class="docutils literal notranslate"><span class="pre">TogRetriever</span></code>, <code class="docutils literal notranslate"><span class="pre">TogV3Retriever</span> <span class="pre">(Turbo</span> <span class="pre">Version)</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#subgraph-retriever">4. Subgraph Retriever</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subgraphretriever"><code class="docutils literal notranslate"><span class="pre">SubgraphRetriever</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#upper-bound-retriever">5. Upper Bound Retriever</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#upperboundretriever"><code class="docutils literal notranslate"><span class="pre">UpperBoundRetriever</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Retrieval Augmentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/retrieval_augmentation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="retrieval-augmentation">
+<h1>Retrieval Augmentation<a class="headerlink" href="#retrieval-augmentation" title="Link to this heading"></a></h1>
+<p>AutoSchemaKG provides a suite of retrievers designed to work with the constructed Knowledge Graph. These retrievers implement different strategies for finding relevant information, ranging from simple vector similarity to complex multi-hop reasoning.</p>
+<section id="base-classes">
+<h2>Base Classes<a class="headerlink" href="#base-classes" title="Link to this heading"></a></h2>
+<p>All retrievers inherit from <code class="docutils literal notranslate"><span class="pre">BaseRetriever</span></code> or its specialized subclasses:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BaseRetriever</span></code></strong>: The abstract base class for all retrieval operations.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BaseEdgeRetriever</span></code></strong>: Specialized for retrieving edges (triples) from the graph.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BasePassageRetriever</span></code></strong>: Specialized for retrieving text passages or documents.</p></li>
+</ul>
+</section>
+<section id="available-retrievers">
+<h2>Available Retrievers<a class="headerlink" href="#available-retrievers" title="Link to this heading"></a></h2>
+<section id="simple-retrievers">
+<h3>1. Simple Retrievers<a class="headerlink" href="#simple-retrievers" title="Link to this heading"></a></h3>
+<p>These provide baseline retrieval capabilities using vector similarity.</p>
+<section id="simplegraphretriever">
+<h4><code class="docutils literal notranslate"><span class="pre">SimpleGraphRetriever</span></code><a class="headerlink" href="#simplegraphretriever" title="Link to this heading"></a></h4>
+<p>Retrieves the most relevant edges (triples) from the Knowledge Graph based on the semantic similarity between the query and the edge embeddings.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleGraphRetriever</span>
+
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">SimpleGraphRetriever</span><span class="p">(</span>
+    <span class="n">llm_generator</span><span class="o">=</span><span class="n">llm_generator</span><span class="p">,</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">data</span>  <span class="c1"># Dictionary containing KG, embeddings, and indices</span>
+<span class="p">)</span>
+
+<span class="n">edges</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">topN</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="simpletextretriever">
+<h4><code class="docutils literal notranslate"><span class="pre">SimpleTextRetriever</span></code><a class="headerlink" href="#simpletextretriever" title="Link to this heading"></a></h4>
+<p>Performs standard dense passage retrieval. It finds the most relevant text chunks/documents by comparing the query embedding with passage embeddings.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleTextRetriever</span>
+
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">SimpleTextRetriever</span><span class="p">(</span>
+    <span class="n">passage_dict</span><span class="o">=</span><span class="n">passage_dict</span><span class="p">,</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+<span class="p">)</span>
+
+<span class="n">passages</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">topN</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="hipporag">
+<h3>2. HippoRAG<a class="headerlink" href="#hipporag" title="Link to this heading"></a></h3>
+<p>HippoRAG is an advanced retrieval method that leverages the Knowledge Graph structure to improve retrieval accuracy, especially for multi-hop questions. It uses Personalized PageRank (PPR) to propagate relevance scores across the graph.</p>
+<section id="hipporagretriever-hipporag2retriever">
+<h4><code class="docutils literal notranslate"><span class="pre">HippoRAGRetriever</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">HippoRAG2Retriever</span></code><a class="headerlink" href="#hipporagretriever-hipporag2retriever" title="Link to this heading"></a></h4>
+<p>These retrievers implement the HippoRAG algorithm. They support different modes for mapping queries to graph components:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">query2edge</span></code></strong>: Maps the query directly to relevant edges in the graph.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">query2node</span></code></strong>: Maps the query to relevant nodes.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ner2node</span></code></strong>: Extracts named entities from the query and maps them to graph nodes.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever</span><span class="w"> </span><span class="kn">import</span> <span class="n">HippoRAG2Retriever</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever.inference_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">InferenceConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">InferenceConfig</span><span class="p">(</span>
+    <span class="n">hipporag_mode</span><span class="o">=</span><span class="s2">&quot;query2edge&quot;</span><span class="p">,</span>
+    <span class="n">ppr_alpha</span><span class="o">=</span><span class="mf">0.99</span>
+<span class="p">)</span>
+
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">HippoRAG2Retriever</span><span class="p">(</span>
+    <span class="n">llm_generator</span><span class="o">=</span><span class="n">llm_generator</span><span class="p">,</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">inference_config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+
+<span class="c1"># Returns relevant passages identified via graph propagation</span>
+<span class="n">passages</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">topN</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="think-on-graph-tog">
+<h3>3. Think on Graph (ToG)<a class="headerlink" href="#think-on-graph-tog" title="Link to this heading"></a></h3>
+<p>The ToG (Think-on-Graph) retriever implement a reasoning-based approach where an LLM explores the graph step-by-step to find answer paths.</p>
+<section id="togretriever-togv3retriever-turbo-version">
+<h4><code class="docutils literal notranslate"><span class="pre">TogRetriever</span></code>, <code class="docutils literal notranslate"><span class="pre">TogV3Retriever</span> <span class="pre">(Turbo</span> <span class="pre">Version)</span></code><a class="headerlink" href="#togretriever-togv3retriever-turbo-version" title="Link to this heading"></a></h4>
+<p>These classes implement different versions of the ToG algorithm. The general process involves:</p>
+<ol class="arabic simple">
+<li><p><strong>Entity Extraction</strong>: Identifying topic entities in the query.</p></li>
+<li><p><strong>Search</strong>: Exploring paths from these entities in the Knowledge Graph.</p></li>
+<li><p><strong>Prune</strong>: Using the LLM or scoring functions to prune irrelevant paths.</p></li>
+<li><p><strong>Reasoning</strong>: Checking if the current paths are sufficient to answer the question.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever</span><span class="w"> </span><span class="kn">import</span> <span class="n">TogRetriever</span>
+
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">TogRetriever</span><span class="p">(</span>
+    <span class="n">llm_generator</span><span class="o">=</span><span class="n">llm_generator</span><span class="p">,</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">inference_config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+
+<span class="c1"># Returns a generated answer or reasoning path</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">topN</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="subgraph-retriever">
+<h3>4. Subgraph Retriever<a class="headerlink" href="#subgraph-retriever" title="Link to this heading"></a></h3>
+<section id="subgraphretriever">
+<h4><code class="docutils literal notranslate"><span class="pre">SubgraphRetriever</span></code><a class="headerlink" href="#subgraphretriever" title="Link to this heading"></a></h4>
+<p>Retrieves a multi-hop subgraph surrounding the entities identified in the query. This is useful for providing a broader context to the LLM.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubgraphRetriever</span>
+
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">SubgraphRetriever</span><span class="p">(</span>
+    <span class="n">llm_generator</span><span class="o">=</span><span class="n">llm_generator</span><span class="p">,</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+
+<span class="n">subgraph_str</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="upper-bound-retriever">
+<h3>5. Upper Bound Retriever<a class="headerlink" href="#upper-bound-retriever" title="Link to this heading"></a></h3>
+<section id="upperboundretriever">
+<h4><code class="docutils literal notranslate"><span class="pre">UpperBoundRetriever</span></code><a class="headerlink" href="#upperboundretriever" title="Link to this heading"></a></h4>
+<p>A utility retriever used for benchmarking. It assumes access to the “gold” (correct) passages and retrieves them directly, filling the remaining slots with random passages if necessary. This helps in establishing an upper bound for performance during evaluation.</p>
+</section>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Retrievers are configured using the <code class="docutils literal notranslate"><span class="pre">InferenceConfig</span></code> class. Key parameters include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">topk</span></code>: Number of results to retrieve.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dmax</span></code>: Maximum depth for graph search (ToG).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wmax</span></code>: Maximum width/branching factor (ToG).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hipporag_mode</span></code>: Strategy for HippoRAG (<code class="docutils literal notranslate"><span class="pre">query2edge</span></code>, <code class="docutils literal notranslate"><span class="pre">query2node</span></code>, etc.).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ppr_alpha</span></code>: Damping factor for PageRank.</p></li>
+</ul>
+<p>See the <a class="reference internal" href="configurations.html"><span class="std std-doc">Configuration Guide</span></a> for full details.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="vectorstores.html" class="btn btn-neutral float-left" title="Vector Stores &amp; Embeddings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../example/advance_features.html" class="btn btn-neutral float-right" title="Custom Knowledge Graph Extraction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

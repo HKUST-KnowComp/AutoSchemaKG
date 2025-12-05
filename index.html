@@ -1,0 +1,225 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoSchemaKG: Atlas-RAG &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation Guide" href="intro/installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            AutoSchemaKG
+              <img src="_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guide/llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AutoSchemaKG: Atlas-RAG</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="autoschemakg-atlas-rag">
+<h1>AutoSchemaKG: Atlas-RAG<a class="headerlink" href="#autoschemakg-atlas-rag" title="Link to this heading"></a></h1>
+<p><strong>Atlas-RAG</strong> is the core package of the <strong>AutoSchemaKG</strong> framework. It enables autonomous knowledge graph (KG) construction by combining <strong>Knowledge Graph Triple Extraction</strong> with dynamic <strong>Schema Induction</strong>.</p>
+<p>Unlike traditional pipelines that require predefined schemas, Atlas-RAG generates schemas automatically via conceptualization, allowing for the construction of high-quality KGs from unstructured text (PDFs, Markdown, etc.) and enabling zero-shot inferencing across domains.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This package implements the research presented in the paper: <a class="reference external" href="https://arxiv.org/abs/2505.23628">AutoSchemaKG: Autonomous Knowledge Graph Construction through Dynamic Schema Induction from Web-Scale Corpora</a>.</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/installation.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="intro/quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro/quickstart.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/quickstart.html#knowledge-graph-construction">1. Knowledge Graph Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/quickstart.html#retrieval-augmented-generation-rag">2. Retrieval Augmented Generation (RAG)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guide/llm_providers.html">LLM Providers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/llm_providers.html#openai-compatible-apis">OpenAI-Compatible APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/llm_providers.html#azure-openai">Azure OpenAI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/llm_providers.html#native-local-models-huggingface-vllm-offline">Native Local Models (HuggingFace / vLLM Offline)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/file_formats.html">File Formats &amp; Data Loading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/file_formats.html#input-data-formats">Input Data Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/file_formats.html#pdf-document-processing">PDF &amp; Document Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/file_formats.html#output-formats">Output Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/configurations.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/configurations.html#knowledge-graph-construction">Knowledge Graph Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/configurations.html#llm-generation">LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/configurations.html#retrieval-inference">Retrieval &amp; Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/configurations.html#benchmarking">Benchmarking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/vectorstores.html">Vector Stores &amp; Embeddings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/vectorstores.html#embedding-models">Embedding Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/vectorstores.html#creating-vector-indices">Creating Vector Indices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/retrieval_augmentation.html">Retrieval Augmentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/retrieval_augmentation.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/retrieval_augmentation.html#available-retrievers">Available Retrievers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/retrieval_augmentation.html#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example/advance_features.html">Custom Knowledge Graph Extraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example/advance_features.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/advance_features.html#creating-a-custom-prompt">1. Creating a Custom Prompt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/advance_features.html#creating-a-custom-schema">2. Creating a Custom Schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/advance_features.html#running-custom-extraction">3. Running Custom Extraction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example/parralel_generation.html">Parallel Knowledge Graph Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#example-scripts">Example Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#implementation-details">Implementation Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parralel_generation.html#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="billion_kg/existing_billion_kg.html#option-1-quick-start-pre-built-server">Option 1: Quick Start (Pre-built Server)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="billion_kg/existing_billion_kg.html#option-2-build-from-source">Option 2: Build from Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="billion_kg/existing_billion_kg.html#hosting-the-rag-api">Hosting the RAG API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="billion_kg/existing_billion_kg.html#usage-example">Usage Example</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro/installation.html" class="btn btn-neutral float-right" title="Installation Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

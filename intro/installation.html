@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Guide &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quick Start" href="quickstart.html" />
+    <link rel="prev" title="AutoSchemaKG: Atlas-RAG" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-pytorch">1. Install PyTorch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-faiss">2. Install FAISS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-installation">Basic Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-from-pypi">Install from PyPI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-dependencies">Optional Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nv-embed-v2-support">NV-Embed-v2 Support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/intro/installation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-guide">
+<h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading"></a></h1>
+<p>This guide provides detailed instructions for installing the <code class="docutils literal notranslate"><span class="pre">atlas-rag</span></code> package and its dependencies.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Python</strong>: 3.9 or higher</p></li>
+<li><p><strong>Operating Systems</strong>: Linux, macOS, Windows</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Before installing <code class="docutils literal notranslate"><span class="pre">atlas-rag</span></code>, you must install PyTorch and FAISS manually to ensure hardware compatibility.</p>
+<section id="install-pytorch">
+<h3>1. Install PyTorch<a class="headerlink" href="#install-pytorch" title="Link to this heading"></a></h3>
+<p>Please visit the <a class="reference external" href="https://pytorch.org/get-started/locally/">official PyTorch website</a> to get the installation command appropriate for your system.</p>
+<p>Example for Linux:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For CPU-only systems</span>
+pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio
+
+<span class="c1"># For systems with NVIDIA GPUs (adjust CUDA version as needed)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch</span><span class="o">==</span><span class="m">2</span>.8.0<span class="w"> </span><span class="nv">torchvision</span><span class="o">==</span><span class="m">0</span>.23.0<span class="w"> </span><span class="nv">torchaudio</span><span class="o">==</span><span class="m">2</span>.8.0<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu126
+</pre></div>
+</div>
+</section>
+<section id="install-faiss">
+<h3>2. Install FAISS<a class="headerlink" href="#install-faiss" title="Link to this heading"></a></h3>
+<p>You need to install either the CPU or GPU version of <a class="reference external" href="https://github.com/facebookresearch/faiss/blob/main/INSTALL.md">FAISS</a>:
+(Recommend to install faiss with CUDA-12.6)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For CPU-only systems</span>
+pip<span class="w"> </span>install<span class="w"> </span>faiss-cpu
+
+<span class="c1"># For systems with NVIDIA GPUs (adjust CUDA version as needed)</span>
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>pytorch<span class="w"> </span>-c<span class="w"> </span>rapidsai<span class="w"> </span>-c<span class="w"> </span>rapidsai-nightly<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>pytorch/label/nightly::faiss-gpu-cuvs<span class="w"> </span><span class="s1">&#39;cuda-version=12.6&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="basic-installation">
+<h2>Basic Installation<a class="headerlink" href="#basic-installation" title="Link to this heading"></a></h2>
+<section id="install-from-pypi">
+<h3>Install from PyPI<a class="headerlink" href="#install-from-pypi" title="Link to this heading"></a></h3>
+<p>The simplest way to install <code class="docutils literal notranslate"><span class="pre">atlas-rag</span></code> is via pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>atlas-rag
+</pre></div>
+</div>
+<p>This will install the core package with all required dependencies.</p>
+</section>
+</section>
+<section id="optional-dependencies">
+<h2>Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Link to this heading"></a></h2>
+<section id="nv-embed-v2-support">
+<h3>NV-Embed-v2 Support<a class="headerlink" href="#nv-embed-v2-support" title="Link to this heading"></a></h3>
+<p>If you need support for NVIDIA’s NV-embed-v2 model, install the package with the <code class="docutils literal notranslate"><span class="pre">nvembed</span></code> extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>atlas-rag<span class="o">[</span>nvembed<span class="o">]</span>
+</pre></div>
+</div>
+<p>This installs compatible versions of <code class="docutils literal notranslate"><span class="pre">transformers</span></code> (&gt;=4.42.4, &lt;=4.47.1) and <code class="docutils literal notranslate"><span class="pre">sentence-transformers</span></code> (2.7.0) required for NV-embed-v2.</p>
+</section>
+</section>
+<section id="verification">
+<h2>Verification<a class="headerlink" href="#verification" title="Link to this heading"></a></h2>
+<p>After installation, verify that the package is installed correctly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">atlas_rag</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">atlas_rag</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also verify the installation of key components:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_extraction</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeGraphExtractor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.llm_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessingConfig</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Installation successful!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="development-installation">
+<h2>Development Installation<a class="headerlink" href="#development-installation" title="Link to this heading"></a></h2>
+<p>If you want to contribute to the project or install from source:</p>
+<ol class="arabic simple">
+<li><p>Clone the repository:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/HKUST-KnowComp/AutoSchemaKG.git
+git<span class="w"> </span>checkout<span class="w"> </span>release/v0.0.5<span class="w"> </span><span class="c1"># checkout to your desired branch</span>
+<span class="nb">cd</span><span class="w"> </span>AutoSchemaKG
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install in development mode:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>After successful installation:</p>
+<ol class="arabic simple">
+<li><p>Check out the <a class="reference internal" href="quickstart.html"><span class="std std-doc">Quick Start Guide</span></a> to begin using atlas-rag</p></li>
+<li><p>Explore <a class="reference internal" href="../example/advance_features.html"><span class="std std-doc">Examples</span></a> for advance use cases</p></li>
+</ol>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Link to this heading"></a></h2>
+<p>If you encounter any installation issues:</p>
+<ul class="simple">
+<li><p>Check the <a class="reference external" href="https://github.com/HKUST-KnowComp/AutoSchemaKG/issues">GitHub Issues</a></p></li>
+<li><p>Contact the maintainers:</p>
+<ul>
+<li><p>Dennis Hong Ting TSANG: httsangaj&#64;connect.ust.hk</p></li>
+<li><p>Jiaxin Bai: jbai&#64;connect.ust.hk</p></li>
+<li><p>Haoyu Huang: haoyuhuang&#64;link.cuhk.edu.hk</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="AutoSchemaKG: Atlas-RAG" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

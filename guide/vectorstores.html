@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vector Stores &amp; Embeddings &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Retrieval Augmentation" href="retrieval_augmentation.html" />
+    <link rel="prev" title="Configuration Guide" href="configurations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Vector Stores &amp; Embeddings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#embedding-models">Embedding Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sentence-transformers-local">1. Sentence Transformers (Local)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nvidia-nv-embed-local">2. NVIDIA NV-Embed (Local)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openai-compatible-api">3. OpenAI-Compatible API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qwen-embedding-api">4. Qwen Embedding (API)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-vector-indices">Creating Vector Indices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Vector Stores &amp; Embeddings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/vectorstores.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="vector-stores-embeddings">
+<h1>Vector Stores &amp; Embeddings<a class="headerlink" href="#vector-stores-embeddings" title="Link to this heading"></a></h1>
+<p>AutoSchemaKG uses vector embeddings to represent nodes, edges, and text passages in the Knowledge Graph. This enables semantic retrieval and similarity search.</p>
+<section id="embedding-models">
+<h2>Embedding Models<a class="headerlink" href="#embedding-models" title="Link to this heading"></a></h2>
+<p>The framework provides a flexible <code class="docutils literal notranslate"><span class="pre">BaseEmbeddingModel</span></code> interface that supports various embedding backends, including HuggingFace Sentence Transformers, NVIDIA’s NV-Embed, and OpenAI-compatible APIs.</p>
+<section id="sentence-transformers-local">
+<h3>1. Sentence Transformers (Local)<a class="headerlink" href="#sentence-transformers-local" title="Link to this heading"></a></h3>
+<p>For standard local embeddings using the <code class="docutils literal notranslate"><span class="pre">sentence-transformers</span></code> library.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore.embedding_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceEmbedding</span>
+
+<span class="c1"># Initialize the underlying model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s2">&quot;sentence-transformers/all-MiniLM-L6-v2&quot;</span><span class="p">)</span>
+
+<span class="c1"># Wrap it with SentenceEmbedding</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">SentenceEmbedding</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Encode text</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">([</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;Knowledge Graph&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="nvidia-nv-embed-local">
+<h3>2. NVIDIA NV-Embed (Local)<a class="headerlink" href="#nvidia-nv-embed-local" title="Link to this heading"></a></h3>
+<p>Optimized support for NVIDIA’s embedding models (e.g., <code class="docutils literal notranslate"><span class="pre">NV-Embed-v2</span></code>). This wrapper handles specific instruction formatting required by these models.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore.embedding_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">NvEmbed</span>
+
+<span class="c1"># Initialize the model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;nvidia/NV-Embed-v2&quot;</span><span class="p">,</span> <span class="n">trust_remote_code</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Wrap it</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">NvEmbed</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Encode with query types (automatically adds instructions)</span>
+<span class="c1"># Supported types: &#39;passage&#39;, &#39;entity&#39;, &#39;edge&#39;, &#39;fill_in_edge&#39;</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">,</span> <span class="n">query_type</span><span class="o">=</span><span class="s2">&quot;passage&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="openai-compatible-api">
+<h3>3. OpenAI-Compatible API<a class="headerlink" href="#openai-compatible-api" title="Link to this heading"></a></h3>
+<p>Use any OpenAI-compatible embedding API (OpenAI, DeepInfra, vLLM, etc.).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore.embedding_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingAPI</span>
+
+<span class="c1"># Initialize OpenAI client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Initialize wrapper</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">EmbeddingAPI</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">)</span>
+
+<span class="c1"># Encode</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">([</span><span class="s2">&quot;Text to embed&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="qwen-embedding-api">
+<h3>4. Qwen Embedding (API)<a class="headerlink" href="#qwen-embedding-api" title="Link to this heading"></a></h3>
+<p>Specialized wrapper for Qwen embedding models served via API, handling specific instruction formats.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore.embedding_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qwen3Emb</span>
+
+<span class="c1"># Initialize OpenAI client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">Qwen3Emb</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen3-Embedding-0.6B&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="creating-vector-indices">
+<h2>Creating Vector Indices<a class="headerlink" href="#creating-vector-indices" title="Link to this heading"></a></h2>
+<p>Once you have an embedding model, you can generate embeddings for your Knowledge Graph components (nodes, edges, text) and create FAISS indices for efficient retrieval.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_embeddings_and_index</span>
+
+<span class="c1"># This function:</span>
+<span class="c1"># 1. Reads the CSV files generated by KnowledgeGraphExtractor</span>
+<span class="c1"># 2. Computes embeddings for nodes, edges, and source texts</span>
+<span class="c1"># 3. Saves the embeddings back to CSV</span>
+<span class="c1"># 4. Builds and saves FAISS indices</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">create_embeddings_and_index</span><span class="p">(</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">encoder</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;all-MiniLM-L6-v2&quot;</span><span class="p">,</span>
+    <span class="n">working_directory</span><span class="o">=</span><span class="s2">&quot;./output_dir&quot;</span><span class="p">,</span>
+    <span class="n">keyword</span><span class="o">=</span><span class="s2">&quot;dataset_name&quot;</span><span class="p">,</span>
+    <span class="n">include_concept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Set to True if concepts were generated</span>
+    <span class="n">include_events</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">normalize_embeddings</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configurations.html" class="btn btn-neutral float-left" title="Configuration Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="retrieval_augmentation.html" class="btn btn-neutral float-right" title="Retrieval Augmentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

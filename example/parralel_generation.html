@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parallel Knowledge Graph Generation &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hosting Existing Billion-Scale Knowledge Graphs" href="../billion_kg/existing_billion_kg.html" />
+    <link rel="prev" title="Custom Knowledge Graph Extraction" href="advance_features.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parallel Knowledge Graph Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#starting-multiple-vllm-instances">Starting Multiple vLLM Instances</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#example-scripts">Example Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#shell-script-configuration">Shell Script Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#port-assignment">Port Assignment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-script-configuration">Python Script Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#quick-start-recommended">Quick Start (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manual-workflow">Manual Workflow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stage-1-triple-extraction">Stage 1: Triple Extraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-2-concept-generation">Stage 2: Concept Generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#triple-extraction-script">Triple Extraction Script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shell-script-launcher">Shell Script Launcher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#speedup-calculation">Speedup Calculation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Parallel Knowledge Graph Generation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example/parralel_generation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parallel-knowledge-graph-generation">
+<h1>Parallel Knowledge Graph Generation<a class="headerlink" href="#parallel-knowledge-graph-generation" title="Link to this heading"></a></h1>
+<p>This guide demonstrates how to parallelize knowledge graph extraction and concept generation using multiple LLM instances running on different ports. By distributing the workload across multiple LLM servers, you can significantly speed up the extraction process for large datasets.</p>
+<blockquote>
+<div><p><strong>Note:</strong> Complete example scripts are available in the <a class="reference external" href="https://github.com/HKUST-KnowComp/AutoSchemaKG/tree/main/example/example_scripts/parallel_generation">GitHub repository</a>.</p>
+</div></blockquote>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The parallel generation approach divides your dataset into <strong>shards</strong> and processes each shard with a separate LLM instance. Each instance runs on a different port, allowing multiple extractions to happen simultaneously.</p>
+<p>The parallel workflow includes two stages:</p>
+<ol class="arabic simple">
+<li><p><strong>Triple Extraction</strong>: Extract knowledge graph triples from raw text in parallel</p></li>
+<li><p><strong>Concept Generation</strong>: Generate concepts and mappings for extracted entities in parallel</p></li>
+</ol>
+<section id="architecture">
+<h3>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                    Original Dataset                         │
+└─────────────────────────────────────────────────────────────┘
+                         │
+                         ├─────────────────────────┐
+                         │                         │
+                         ▼                         ▼
+              ┌─────────────────┐      ┌─────────────────┐
+              │   Shard 0       │      │   Shard 1       │
+              │   Chunks        │      │   Chunks        │
+              └─────────────────┘      └─────────────────┘
+                         │                         │
+                         ▼                         ▼
+              ┌─────────────────┐      ┌─────────────────┐
+              │ LLM Instance 0  │      │ LLM Instance 1  │
+              │ (localhost:8135)│      │ (localhost:8136)│
+              └─────────────────┘      └─────────────────┘
+                         │                         │
+                         ▼                         ▼
+              ┌─────────────────┐      ┌─────────────────┐
+              │   Shard 0       │      │   Shard 1       │
+              │    Triple       │      │    Triple       │
+              │  Extraction     │      │   Extraction    │
+              └─────────────────┘      └─────────────────┘
+                         │                         │
+                         ▼                         ▼
+              ┌─────────────────┐      ┌─────────────────┐
+              │   Shard 0       │      │   Shard 1       │
+              │    Concept      │      │    Concept      │
+              │   Generation    │      │   Generation    │
+              └─────────────────┘      └─────────────────┘
+                         │                         │
+                         ▼                         ▼
+                         │                         │
+                         └─────────┬───────────────┘
+                                   ▼
+                        ┌─────────────────────┐
+                        │   Merged Results    │
+                        └─────────────────────┘
+</pre></div>
+</div>
+</section>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<section id="starting-multiple-vllm-instances">
+<h3>Starting Multiple vLLM Instances<a class="headerlink" href="#starting-multiple-vllm-instances" title="Link to this heading"></a></h3>
+<p>Start multiple LLM server instances on different ports. For 3 parallel instances:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Terminal 1: Port 8135</span>
+<span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen2.5-7B-Instruct<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span><span class="m">8135</span><span class="w"> </span>--max-model-len<span class="w"> </span><span class="m">8192</span><span class="w"> </span>--gpu-memory-utilization<span class="w"> </span><span class="m">0</span>.9
+
+<span class="c1"># Terminal 2: Port 8136</span>
+<span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen2.5-7B-Instruct<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span><span class="m">8136</span><span class="w"> </span>--max-model-len<span class="w"> </span><span class="m">8192</span><span class="w"> </span>--gpu-memory-utilization<span class="w"> </span><span class="m">0</span>.9
+
+<span class="c1"># Terminal 3: Port 8137</span>
+<span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>vllm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen2.5-7B-Instruct<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span><span class="m">8137</span><span class="w"> </span>--max-model-len<span class="w"> </span><span class="m">8192</span><span class="w"> </span>--gpu-memory-utilization<span class="w"> </span><span class="m">0</span>.9
+</pre></div>
+</div>
+<p><strong>Tips:</strong></p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">tmux</span></code> or <code class="docutils literal notranslate"><span class="pre">screen</span></code> to manage multiple terminals</p></li>
+<li><p>Adjust <code class="docutils literal notranslate"><span class="pre">--gpu-memory-utilization</span></code> based on available GPU memory</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> to assign different GPUs to each instance</p></li>
+</ul>
+</section>
+</section>
+<section id="example-scripts">
+<h2>Example Scripts<a class="headerlink" href="#example-scripts" title="Link to this heading"></a></h2>
+<p>The example implementation includes the following scripts (available on <a class="reference external" href="https://github.com/HKUST-KnowComp/AutoSchemaKG/tree/main/example/example_scripts/parallel_generation">GitHub</a>):</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">1_slice_kg_extraction.py</span></code></strong>: Triple extraction script for a single shard</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">1_slice_kg_extraction.sh</span></code></strong>: Launches parallel triple extraction across all shards</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">2_concept_generation.py</span></code></strong>: Concept generation script for a single shard</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">2_concept_generation.sh</span></code></strong>: Launches parallel concept generation across all shards</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">3_final_to_graphml.py</span></code></strong>: Final GraphML conversion script</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">run_full_pipeline.sh</span></code></strong>: Master script that runs both stages sequentially</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<section id="shell-script-configuration">
+<h3>Shell Script Configuration<a class="headerlink" href="#shell-script-configuration" title="Link to this heading"></a></h3>
+<p>Edit the variables at the top of the shell scripts (<code class="docutils literal notranslate"><span class="pre">1_slice_kg_extraction.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">2_concept_generation.sh</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">TOTAL_SHARDS</span><span class="o">=</span><span class="m">3</span><span class="w">                    </span><span class="c1"># Number of parallel processes</span>
+<span class="nv">BASE_PORT</span><span class="o">=</span><span class="m">8135</span><span class="w">                    </span><span class="c1"># Starting port number</span>
+<span class="nv">LOG_DIR</span><span class="o">=</span><span class="s2">&quot;/path/to/log&quot;</span><span class="w">           </span><span class="c1"># Directory for log files</span>
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;/path/to/scripts&quot;</span><span class="w">    </span><span class="c1"># Directory containing Python scripts</span>
+<span class="nv">KEYWORD</span><span class="o">=</span><span class="s2">&quot;musique&quot;</span><span class="w">                 </span><span class="c1"># Dataset keyword for filtering</span>
+</pre></div>
+</div>
+</section>
+<section id="port-assignment">
+<h3>Port Assignment<a class="headerlink" href="#port-assignment" title="Link to this heading"></a></h3>
+<p>Ports are automatically assigned based on shard number: <code class="docutils literal notranslate"><span class="pre">BASE_PORT</span> <span class="pre">+</span> <span class="pre">shard_number</span></code></p>
+<p>Example with <code class="docutils literal notranslate"><span class="pre">BASE_PORT=8135</span></code> and <code class="docutils literal notranslate"><span class="pre">TOTAL_SHARDS=3</span></code>:</p>
+<ul class="simple">
+<li><p>Shard 0 → Port 8135</p></li>
+<li><p>Shard 1 → Port 8136</p></li>
+<li><p>Shard 2 → Port 8137</p></li>
+</ul>
+</section>
+<section id="python-script-configuration">
+<h3>Python Script Configuration<a class="headerlink" href="#python-script-configuration" title="Link to this heading"></a></h3>
+<p>The Python scripts (<code class="docutils literal notranslate"><span class="pre">1_slice_kg_extraction.py</span></code> and <code class="docutils literal notranslate"><span class="pre">2_concept_generation.py</span></code>) support the following command-line arguments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--shard&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Shard number to process&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--total_shards&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Total number of shards&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8135</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Port number for the LLM API&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--keyword&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;musique&quot;</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Keyword for filtering data files&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="quick-start-recommended">
+<h3>Quick Start (Recommended)<a class="headerlink" href="#quick-start-recommended" title="Link to this heading"></a></h3>
+<p>Clone the repository and navigate to the parallel generation examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>example/example_scripts/parallel_generation
+
+<span class="c1"># 1. Start LLM instances on ports 8135, 8136, 8137 (see Prerequisites)</span>
+<span class="c1"># 2. Configure TOTAL_SHARDS and BASE_PORT in the scripts</span>
+<span class="c1"># 3. Run the complete pipeline</span>
+./run_full_pipeline.sh
+</pre></div>
+</div>
+</section>
+<section id="manual-workflow">
+<h3>Manual Workflow<a class="headerlink" href="#manual-workflow" title="Link to this heading"></a></h3>
+<p>If you prefer to run each stage separately:</p>
+<section id="stage-1-triple-extraction">
+<h4>Stage 1: Triple Extraction<a class="headerlink" href="#stage-1-triple-extraction" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span>+x<span class="w"> </span>1_slice_kg_extraction.sh
+./1_slice_kg_extraction.sh
+
+<span class="c1"># Monitor progress in real-time</span>
+tail<span class="w"> </span>-f<span class="w"> </span>log/shard_*.log
+</pre></div>
+</div>
+</section>
+<section id="stage-2-concept-generation">
+<h4>Stage 2: Concept Generation<a class="headerlink" href="#stage-2-concept-generation" title="Link to this heading"></a></h4>
+<p>After triple extraction completes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span>+x<span class="w"> </span>2_concept_generation.sh
+./2_concept_generation.sh
+
+<span class="c1"># Monitor progress in real-time</span>
+tail<span class="w"> </span>-f<span class="w"> </span>log/concept_shard_*.log
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading"></a></h2>
+<section id="triple-extraction-script">
+<h3>Triple Extraction Script<a class="headerlink" href="#triple-extraction-script" title="Link to this heading"></a></h3>
+<p>Here’s a simplified example of the parallel triple extraction implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_extraction</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeGraphExtractor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessingConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.llm_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGenerator</span><span class="p">,</span> <span class="n">GenerationConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">argparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArgumentParser</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--shard&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--total_shards&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8135</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--keyword&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;musique&quot;</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="c1"># Initialize LLM client pointing to specific port</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;http://localhost:</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">/v1&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;EMPTY&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Configure generation</span>
+<span class="n">gen_config</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">16384</span><span class="p">)</span>
+<span class="n">triple_generator</span> <span class="o">=</span> <span class="n">LLMGenerator</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">,</span> 
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span><span class="p">,</span>
+    <span class="n">max_workers</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> 
+    <span class="n">default_config</span><span class="o">=</span><span class="n">gen_config</span>
+<span class="p">)</span>
+
+<span class="c1"># Configure KG extraction for this specific shard</span>
+<span class="n">kg_extraction_config</span> <span class="o">=</span> <span class="n">ProcessingConfig</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;Qwen2.5-7B-Instruct&quot;</span><span class="p">,</span>
+    <span class="n">data_directory</span><span class="o">=</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span>
+    <span class="n">filename_pattern</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keyword</span><span class="p">,</span>
+    <span class="n">batch_size_triple</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">output_directory</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;/path/to/output&#39;</span><span class="p">,</span>
+    <span class="n">current_shard_triple</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">shard</span><span class="p">,</span>      <span class="c1"># Current shard number</span>
+    <span class="n">total_shards_triple</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">total_shards</span><span class="p">,</span> <span class="c1"># Total number of shards</span>
+    <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">16384</span>
+<span class="p">)</span>
+
+<span class="c1"># Run extraction for this shard</span>
+<span class="n">kg_extractor</span> <span class="o">=</span> <span class="n">KnowledgeGraphExtractor</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">triple_generator</span><span class="p">,</span> 
+    <span class="n">config</span><span class="o">=</span><span class="n">kg_extraction_config</span>
+<span class="p">)</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">run_extraction</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="shell-script-launcher">
+<h3>Shell Script Launcher<a class="headerlink" href="#shell-script-launcher" title="Link to this heading"></a></h3>
+<p>The shell script launches multiple Python processes in parallel:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nv">TOTAL_SHARDS</span><span class="o">=</span><span class="m">3</span>
+<span class="nv">BASE_PORT</span><span class="o">=</span><span class="m">8135</span>
+<span class="nv">LOG_DIR</span><span class="o">=</span><span class="s2">&quot;./log&quot;</span>
+
+run_shard<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">shard_num</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">port</span><span class="o">=</span><span class="k">$((</span><span class="nv">BASE_PORT</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">shard_num</span><span class="k">))</span>
+<span class="w">    </span>
+<span class="w">    </span>python<span class="w"> </span>1_slice_kg_extraction.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--shard<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">shard_num</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--total_shards<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TOTAL_SHARDS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--port<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--keyword<span class="w"> </span><span class="s2">&quot;musique&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG_DIR</span><span class="si">}</span><span class="s2">/shard_</span><span class="si">${</span><span class="nv">shard_num</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="o">}</span>
+
+<span class="c1"># Launch all shards in parallel</span>
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">i</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>i&lt;TOTAL_SHARDS<span class="p">;</span><span class="w"> </span>i++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span>run_shard<span class="w"> </span><span class="nv">$i</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Stagger startup</span>
+<span class="k">done</span>
+
+<span class="c1"># Wait for all processes to complete</span>
+<span class="nb">wait</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h2>
+<section id="speedup-calculation">
+<h3>Speedup Calculation<a class="headerlink" href="#speedup-calculation" title="Link to this heading"></a></h3>
+<p>With N shards running in parallel, the theoretical speedup is close to N×, though actual performance depends on:</p>
+<ul class="simple">
+<li><p>GPU memory availability</p></li>
+<li><p>Network bandwidth (if using remote LLM APIs)</p></li>
+<li><p>Disk I/O for reading input and writing output</p></li>
+<li><p>Load balancing across shards</p></li>
+</ul>
+</section>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/HKUST-KnowComp/AutoSchemaKG/blob/main/example/atlas_full_pipeline.ipynb">Full pipeline example notebook</a></p></li>
+<li><p><a class="reference external" href="https://github.com/HKUST-KnowComp/AutoSchemaKG/tree/main/atlas_rag/kg_construction">Triple extraction documentation</a></p></li>
+<li><p><a class="reference external" href="https://docs.vllm.ai/en/latest/">vLLM deployment guide</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="advance_features.html" class="btn btn-neutral float-left" title="Custom Knowledge Graph Extraction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../billion_kg/existing_billion_kg.html" class="btn btn-neutral float-right" title="Hosting Existing Billion-Scale Knowledge Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

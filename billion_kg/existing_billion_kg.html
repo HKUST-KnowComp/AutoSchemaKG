@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hosting Existing Billion-Scale Knowledge Graphs &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Parallel Knowledge Graph Generation" href="../example/parralel_generation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hosting Existing Billion-Scale Knowledge Graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#option-1-quick-start-pre-built-server">Option 1: Quick Start (Pre-built Server)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#option-2-build-from-source">Option 2: Build from Source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-neo4j">1. Setup Neo4j</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prepare-data">2. Prepare Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-data">3. Import Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hosting-the-rag-api">Hosting the RAG API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Hosting Existing Billion-Scale Knowledge Graphs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/billion_kg/existing_billion_kg.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hosting-existing-billion-scale-knowledge-graphs">
+<h1>Hosting Existing Billion-Scale Knowledge Graphs<a class="headerlink" href="#hosting-existing-billion-scale-knowledge-graphs" title="Link to this heading"></a></h1>
+<p>This guide explains how to host and use our pre-constructed billion-scale knowledge graphs (Wiki, Pes2o, Common Crawl) using Neo4j Community Edition.</p>
+<section id="option-1-quick-start-pre-built-server">
+<h2>Option 1: Quick Start (Pre-built Server)<a class="headerlink" href="#option-1-quick-start-pre-built-server" title="Link to this heading"></a></h2>
+<p>The easiest way to get started is to download the pre-configured Neo4j server with the data already imported.</p>
+<ol class="arabic">
+<li><p><strong>Download</strong>: Get the zipped server from our <a class="reference external" href="https://huggingface.co/datasets/gzone0111/AutoSchemaKG">Huggingface Dataset</a>.</p>
+<p>You can download the specific dataset you need:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>File Name</p></th>
+<th class="head"><p>Size</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Common Crawl</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">neo4j-server-cc.zip</span></code></p></td>
+<td><p>~213 GB</p></td>
+<td><p>Large-scale web crawl data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Wiki</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">neo4j-server-wiki.zip</span></code></p></td>
+<td><p>~74.1 GB</p></td>
+<td><p>Wikipedia-based knowledge graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Pes2o</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">neo4j-server-pes2o.zip</span></code></p></td>
+<td><p>~53.2 GB</p></td>
+<td><p>Academic papers dataset.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Download via CLI:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install huggingface-cli</span>
+pip<span class="w"> </span>install<span class="w"> </span>huggingface_hub
+
+<span class="c1"># Download specific file (e.g., Wiki)</span>
+hf<span class="w"> </span>download<span class="w"> </span>gzone0111/AutoSchemaKG<span class="w"> </span><span class="s1">&#39;ATLAS Neo4j Server Zip/neo4j-server-wiki.zip&#39;</span><span class="w"> </span>--local-dir<span class="w"> </span>.<span class="w"> </span>--repo-type<span class="w"> </span>dataset
+</pre></div>
+</div>
+</li>
+<li><p><strong>Unzip</strong>: Extract the downloaded file.</p></li>
+<li><p><strong>Run</strong>: Start the server using the bash file in the unzipped folder.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace {dataset-name} with wiki, pes2o, or cc</span>
+./neo4j-server-<span class="o">{</span>dataset-name<span class="o">}</span>/bin/neo4j<span class="w"> </span>start
+</pre></div>
+</div>
+</section>
+<section id="option-2-build-from-source">
+<h2>Option 2: Build from Source<a class="headerlink" href="#option-2-build-from-source" title="Link to this heading"></a></h2>
+<p>If you prefer to build the database yourself from the raw CSV files, follow these steps.</p>
+<section id="setup-neo4j">
+<h3>1. Setup Neo4j<a class="headerlink" href="#setup-neo4j" title="Link to this heading"></a></h3>
+<p>We provide scripts to download Neo4j Community Edition, install required plugins (APOC, GDS), and configure the environment.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>neo4j_scripts
+sh<span class="w"> </span>get_neo4j_cc.sh<span class="w">    </span><span class="c1"># For Common Crawl</span>
+sh<span class="w"> </span>get_neo4j_pes2o.sh<span class="w"> </span><span class="c1"># For Pes2o</span>
+sh<span class="w"> </span>get_neo4j_wiki.sh<span class="w">  </span><span class="c1"># For Wiki</span>
+</pre></div>
+</div>
+<p><strong>Configuration</strong>:</p>
+<ul class="simple">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">AutoschemaKG/neo4j_scripts/neo4j.conf</span></code> to <code class="docutils literal notranslate"><span class="pre">neo4j-server-{dataset}/conf/neo4j.conf</span></code>.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">dbms.default_database</span></code> to your desired dataset name (e.g., <code class="docutils literal notranslate"><span class="pre">wiki-csv-json-text</span></code>).</p></li>
+<li><p>Configure ports (Bolt, HTTP, HTTPS) to avoid conflicts if running multiple servers.</p></li>
+</ul>
+</section>
+<section id="prepare-data">
+<h3>2. Prepare Data<a class="headerlink" href="#prepare-data" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Download Data</strong>: Download the CSV dumps from our <a class="reference external" href="https://huggingface.co/datasets/gzone0111/AutoSchemaKG/tree/main">Huggingface Dataset</a>. You need to download all the zip files from the <code class="docutils literal notranslate"><span class="pre">ATLAS</span> <span class="pre">Neo4j</span> <span class="pre">Dump</span></code> folder.</p>
+<p><strong>Download via CLI:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hf<span class="w"> </span>download<span class="w"> </span>gzone0111/AutoSchemaKG<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;ATLAS Neo4j Dump/*&quot;</span><span class="w"> </span>--local-dir<span class="w"> </span>.<span class="w"> </span>--repo-type<span class="w"> </span>dataset
+</pre></div>
+</div>
+</li>
+<li><p><strong>Decompress</strong>: Run the <code class="docutils literal notranslate"><span class="pre">decompress_csv_files.sh</span></code> script to decompress all zip files in parallel to a <code class="docutils literal notranslate"><span class="pre">decompressed</span></code> directory. Then move the files to the <code class="docutils literal notranslate"><span class="pre">./import</span></code> directory of your Neo4j server.</p>
+<p><strong>Storage Requirements:</strong>
+Ensure you have sufficient disk space. Approximate sizes after import and decompression:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">./neo4j-server-wiki</span></code></p></td>
+<td><p>342 GB</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">./neo4j-server-cc</span></code></p></td>
+<td><p>907 GB</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">./neo4j-server-pes2o</span></code></p></td>
+<td><p>249 GB</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">./import</span></code> (Raw CSVs)</p></td>
+<td><p>2.3 TB</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><strong>Add Numeric IDs</strong>: (Optional if using provided processed CSVs) If building from raw extraction output, you may need to add numeric IDs for vector indexing.</p></li>
+</ol>
+</section>
+<section id="import-data">
+<h3>3. Import Data<a class="headerlink" href="#import-data" title="Link to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">neo4j-admin</span> <span class="pre">import</span></code> to load the CSVs. This is much faster than Cypher <code class="docutils literal notranslate"><span class="pre">LOAD</span> <span class="pre">CSV</span></code> for large datasets.</p>
+<p><strong>Example: Importing Wiki Graph</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./neo4j-server-wiki/bin/neo4j-admin<span class="w"> </span>database<span class="w"> </span>import<span class="w"> </span>full<span class="w"> </span>wiki-csv-json-text<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--nodes<span class="o">=</span>./import/text_nodes_en_simple_wiki_v0_from_json_with_numeric_id.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>./import/triple_nodes_en_simple_wiki_v0_from_json_without_emb_with_numeric_id.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>./import/concept_nodes_en_simple_wiki_v0_from_json_without_emb.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--relationships<span class="o">=</span>./import/text_edges_en_simple_wiki_v0_from_json.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>./import/triple_edges_en_simple_wiki_v0_from_json_without_emb_full_concept_with_numeric_id.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>./import/concept_edges_en_simple_wiki_v0_from_json_without_emb.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--overwrite-destination<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--multiline-fields<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--id-type<span class="o">=</span>string<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--verbose<span class="w"> </span>--skip-bad-relationships<span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+<p><em>(Refer to the notebook or repository scripts for Pes2o and CC import commands)</em></p>
+</section>
+</section>
+<section id="hosting-the-rag-api">
+<h2>Hosting the RAG API<a class="headerlink" href="#hosting-the-rag-api" title="Link to this heading"></a></h2>
+<p>Once the Neo4j server is running, you can host the ATLAS RAG API to perform retrieval.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>example/example_scripts/neo4j_kg/atlas_api_server_demo.py
+</pre></div>
+</div>
+<p>Ensure you configure the <code class="docutils literal notranslate"><span class="pre">LargeKGConfig</span></code> in the script to point to your Neo4j instance (URI, username, password) and the correct FAISS indices.</p>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>You can query the hosted RAG API using an OpenAI-compatible client. (ref: <code class="docutils literal notranslate"><span class="pre">example/example_scripts/neo4j_kg/atlas_api_client_demo.py</span></code>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="c1"># Point to your hosted API</span>
+<span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;http://0.0.0.0:10089/v1/&quot;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;EMPTY&quot;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">)</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant that answers questions based on the knowledge graph.&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Question: Who is Alex Mercer?&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama&quot;</span><span class="p">,</span>
+    <span class="n">messages</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">extra_body</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;retriever_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;topN&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;number_of_source_nodes_per_ner&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;sampling_area&quot;</span><span class="p">:</span> <span class="mi">10</span> 
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../example/parralel_generation.html" class="btn btn-neutral float-left" title="Parallel Knowledge Graph Generation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

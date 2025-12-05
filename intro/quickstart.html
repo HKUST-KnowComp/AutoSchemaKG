@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start &mdash; AutoSchemaKG 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/atlas-rag-icon-wo-background.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="LLM Providers" href="../guide/llm_providers.html" />
+    <link rel="prev" title="Installation Guide" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            AutoSchemaKG
+              <img src="../_static/atlas-rag-icon-wo-background.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#knowledge-graph-construction">1. Knowledge Graph Construction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execution">Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#retrieval-augmented-generation-rag">2. Retrieval Augmented Generation (RAG)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-embeddings">Setup Embeddings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-index">Create Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#perform-retrieval">Perform Retrieval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-answer">Generate Answer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/llm_providers.html">LLM Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/file_formats.html">File Formats &amp; Data Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configurations.html">Configuration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/vectorstores.html">Vector Stores &amp; Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/retrieval_augmentation.html">Retrieval Augmentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../example/advance_features.html">Custom Knowledge Graph Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example/parralel_generation.html">Parallel Knowledge Graph Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Billion-Scale KG Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../billion_kg/existing_billion_kg.html">Hosting Existing Billion-Scale Knowledge Graphs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AutoSchemaKG</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/intro/quickstart.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
+<p>This guide walks you through the full pipeline of creating a Knowledge Graph (KG) and performing Retrieval-Augmented Generation (RAG) using <code class="docutils literal notranslate"><span class="pre">AutoSchemaKG</span></code>.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Ensure you have the necessary packages installed and your environment configured. You will need an LLM endpoint (e.g., OpenAI compatible) and an embedding model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_extraction</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeGraphExtractor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.kg_construction.triple_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessingConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.llm_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="c1"># Initialize LLM Client (assuming you are hosting LLM instance with vllm)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://0.0.0.0:8129/v1&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;EMPTY&quot;</span><span class="p">)</span>
+<span class="n">llm_generator</span> <span class="o">=</span> <span class="n">LLMGenerator</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="knowledge-graph-construction">
+<h2>1. Knowledge Graph Construction<a class="headerlink" href="#knowledge-graph-construction" title="Link to this heading"></a></h2>
+<p>The construction process involves extracting triples from your data, converting them to CSV, and finally to GraphML format.</p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>Set up the processing configuration. Point <code class="docutils literal notranslate"><span class="pre">data_directory</span></code> to your source documents.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kg_extraction_config</span> <span class="o">=</span> <span class="n">ProcessingConfig</span><span class="p">(</span>
+      <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span><span class="p">,</span>
+      <span class="n">data_directory</span><span class="o">=</span><span class="s1">&#39;example/example_data&#39;</span><span class="p">,</span>
+      <span class="n">filename_pattern</span><span class="o">=</span><span class="s1">&#39;Dulce&#39;</span><span class="p">,</span> <span class="c1"># Only process files containing this substring in their filename</span>
+      <span class="n">output_directory</span><span class="o">=</span><span class="s1">&#39;example/generated/test_data&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">kg_extractor</span> <span class="o">=</span> <span class="n">KnowledgeGraphExtractor</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">llm_generator</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">kg_extraction_config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="execution">
+<h3>Execution<a class="headerlink" href="#execution" title="Link to this heading"></a></h3>
+<p>Run the extraction pipeline and convert the results to GraphML.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Extract Triples</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">run_extraction</span><span class="p">()</span>
+
+<span class="c1"># 2. Convert to CSV</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">convert_json_to_csv</span><span class="p">()</span>
+
+<span class="c1"># 3. Schema Induction</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">generate_concept_csv_temp</span><span class="p">()</span>
+
+<span class="c1"># 4. Concert Concept to CSV</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">create_concept_csv</span><span class="p">()</span>
+
+<span class="c1"># 5. Convert to GraphML for NetworkX</span>
+<span class="n">kg_extractor</span><span class="o">.</span><span class="n">convert_to_graphml</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="retrieval-augmented-generation-rag">
+<h2>2. Retrieval Augmented Generation (RAG)<a class="headerlink" href="#retrieval-augmented-generation-rag" title="Link to this heading"></a></h2>
+<p>Once you have your Knowledge Graph in GraphML format, you can index it and perform retrieval.</p>
+<section id="setup-embeddings">
+<h3>Setup Embeddings<a class="headerlink" href="#setup-embeddings" title="Link to this heading"></a></h3>
+<p>Initialize the embedding model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore.embedding_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceEmbedding</span>
+
+<span class="n">encoder_model_name</span> <span class="o">=</span> <span class="s2">&quot;sentence-transformers/all-MiniLM-L6-v2&quot;</span>
+<span class="n">sentence_model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">encoder_model_name</span><span class="p">,</span> <span class="n">trust_remote_code</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">sentence_encoder</span> <span class="o">=</span> <span class="n">SentenceEmbedding</span><span class="p">(</span><span class="n">sentence_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-index">
+<h3>Create Index<a class="headerlink" href="#create-index" title="Link to this heading"></a></h3>
+<p>Create embeddings and the FAISS index for your graph.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.vectorstore</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_embeddings_and_index</span>
+
+<span class="c1"># Use the output directory from the KG construction step</span>
+<span class="n">working_directory</span> <span class="o">=</span> <span class="s1">&#39;example/example_data/test_data&#39;</span> 
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">create_embeddings_and_index</span><span class="p">(</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="n">encoder_model_name</span><span class="p">,</span>
+    <span class="n">working_directory</span><span class="o">=</span><span class="n">working_directory</span><span class="p">,</span>
+    <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;test_data&#39;</span><span class="p">,</span>
+    <span class="n">include_concept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># Set to True if you generated concepts</span>
+    <span class="n">include_events</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">normalize_embeddings</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="perform-retrieval">
+<h3>Perform Retrieval<a class="headerlink" href="#perform-retrieval" title="Link to this heading"></a></h3>
+<p>Initialize the retriever (e.g., <code class="docutils literal notranslate"><span class="pre">HippoRAG2Retriever</span></code>) and ask a question.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atlas_rag.retriever</span><span class="w"> </span><span class="kn">import</span> <span class="n">HippoRAG2Retriever</span>
+
+<span class="c1"># Initialize Retriever</span>
+<span class="n">hipporag2_retriever</span> <span class="o">=</span> <span class="n">HippoRAG2Retriever</span><span class="p">(</span>
+    <span class="n">llm_generator</span><span class="o">=</span><span class="n">llm_generator</span><span class="p">,</span>
+    <span class="n">sentence_encoder</span><span class="o">=</span><span class="n">sentence_encoder</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Retrieve Context</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;Your question here?&quot;</span>
+<span class="n">content</span><span class="p">,</span> <span class="n">sorted_context_ids</span> <span class="o">=</span> <span class="n">hipporag2_retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">topN</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieved content: </span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-answer">
+<h3>Generate Answer<a class="headerlink" href="#generate-answer" title="Link to this heading"></a></h3>
+<p>Use the retrieved context to generate an answer with the LLM.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sorted_context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm_generator</span><span class="o">.</span><span class="n">generate_with_context</span><span class="p">(</span>
+    <span class="n">query</span><span class="p">,</span> 
+    <span class="n">sorted_context</span><span class="p">,</span> 
+    <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> 
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../guide/llm_providers.html" class="btn btn-neutral float-right" title="LLM Providers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, TSANG, Hong Ting.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
