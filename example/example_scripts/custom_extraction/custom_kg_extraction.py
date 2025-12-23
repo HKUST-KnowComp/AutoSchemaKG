@@ -11,13 +11,16 @@ args = parser.parse_args()
 # Load OpenRouter API key from config file
 config = ConfigParser()
 config.read('config.ini')
-client = OpenAI(base_url="http://0.0.0.0:8129/v1", api_key="EMPTY")
+client = OpenAI(
+  base_url="https://api.deepinfra.com/v1/openai",
+  api_key=config['settings']['DEEPINFRA_API_KEY'],
+)
 triple_generator = LLMGenerator(client=client, model_name=args.model)
 filename_pattern = args.keyword
 # get model name for after slash
 dir_name = args.model.split("/")[-1]
 output_directory = f'example/example_scripts/custom_extraction/{dir_name}/{filename_pattern}'
-data_directory = f'benchmark_data/{filename_pattern}'
+data_directory = f'example/example_data/'
 # triple_generator = LLMGenerator(client, model_name=model_name)
 model_name = args.model
 kg_extraction_config = ProcessingConfig(
@@ -31,8 +34,8 @@ kg_extraction_config = ProcessingConfig(
       max_workers=5,
       remove_doc_spaces=True, # For removing duplicated spaces in the document text
       include_concept=False, # Whether to include concept nodes and edges in the knowledge graph
-      triple_extraction_prompt_path='custom_prompt/custom_prompt.json',
-      triple_extraction_schema_path='custom_prompt/custom_schema.json',
+      triple_extraction_prompt_path='example/example_scripts/custom_extraction/custom_benchmark/custom_prompt.json',
+      triple_extraction_schema_path='example/example_scripts/custom_extraction/custom_benchmark/custom_schema.json',
 )
 kg_extractor = KnowledgeGraphExtractor(model=triple_generator, config=kg_extraction_config)
 # construct entity&event graph

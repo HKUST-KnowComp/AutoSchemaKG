@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "atlas-rag"
-version = "0.0.5"
+version = "0.0.5.post1"
 authors = [
     {name = "Jiaxin Bai", email = "jbai@connect.ust.hk"},
     {name = "Hong Ting TSANG", email = "httsangaj@connect.ust.hk"},
