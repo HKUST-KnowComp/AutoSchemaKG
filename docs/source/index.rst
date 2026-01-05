@@ -31,6 +31,7 @@ Unlike traditional pipelines that require predefined schemas, Atlas-RAG generate
 
    example/advance_features
    example/parralel_generation
+   example/multilingual_support
 
 .. toctree::
    :maxdepth: 2

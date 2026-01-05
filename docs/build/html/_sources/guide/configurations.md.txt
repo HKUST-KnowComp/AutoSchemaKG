@@ -34,7 +34,11 @@ from atlas_rag.kg_construction.triple_config import ProcessingConfig
 | `deduplicate_text` | bool | `False` | Whether to deduplicate input text. |
 | `triple_extraction_prompt_path` | str | `None` | Path to custom triple extraction prompt. |
 | `triple_extraction_schema_path` | str | `None` | Path to custom triple extraction schema. |
+| `max_new_tokens` | int | `None` | Override maximum number of new tokens to generate (for backward compatibility). |
+| `repetition_penalty` | float | `None` | Override repetition penalty parameter (for backward compatibility). |
 | `benchmark` | bool | `False` | Enable benchmarking mode (e.g., for GPU hours). |
+| `chunk_size` | int | `8192` | Maximum characters per chunk for text chunking. |
+| `chunk_overlap` | int | `0` | Overlap between chunks for context preservation. |
 
 ## LLM Generation
 
