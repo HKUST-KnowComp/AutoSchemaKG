@@ -107,15 +107,18 @@ def custom_schema_json_2_csv(dataset, data_dir, output_dir, schema):
                         # process for case one to one
                         if one_to_one:
                             triple_keys = list(schema_items.keys())
+                            entity_keys = []
+                            node_types = []
+                            for key in triple_keys:
+                                if key not in ["Relation", "relation"]:
+                                    entity_keys.append(key)
+                                    node_types.append(schema_items[key]['node_type'] if 'node_type' in schema_items[key] else 'entity')
+                            assert len(entity_keys) == 2, f"One-to-one triple schema must have exactly two entities: {entity_keys}"    
                             for triple in triple_dict:
                                # get the three keys
                                # We can only ensure either "Relation" or "relation" is always exist for edge name for one-to-one triple
                                 assert not ("Relation" not in triple and "relation" not in triple), f"Missing relation key for {triple}"
-                                entity_keys = []
-                                for key in triple_keys:
-                                    if key not in ["Relation", "relation"]:
-                                        entity_keys.append(key)
-                                assert len(entity_keys) == 2, f"One-to-one triple schema must have exactly two entities: {entity_keys}"    
+                                
                                 # check if it is relation or Relation for relation key
                                 head_entity, relation, tail_entity = (triple[key] for key in triple_keys)
                                 if head_entity is None or tail_entity is None or relation is None:
@@ -129,13 +132,13 @@ def custom_schema_json_2_csv(dataset, data_dir, output_dir, schema):
                                 if head_entity not in visited_nodes:
                                     visited_nodes.add(head_entity)
                                     all_entities.add(head_entity)
-                                    writer_node.writerow([head_entity, "entity", [], [], "Node"])
+                                    writer_node.writerow([head_entity, node_types[0], [], [], "Node"])
                                     csv_writer_edge_text.writerow([head_entity, text_hash_id, "Source"])
 
                                 if tail_entity not in visited_nodes:
                                     visited_nodes.add(tail_entity)
                                     all_entities.add(tail_entity)
-                                    writer_node.writerow([tail_entity, "entity", [], [], "Node"])
+                                    writer_node.writerow([tail_entity, node_types[1], [], [], "Node"])
                                     csv_writer_edge_text.writerow([tail_entity, text_hash_id, "Source"])
 
                                 all_relations.add(relation)
@@ -143,31 +146,36 @@ def custom_schema_json_2_csv(dataset, data_dir, output_dir, schema):
                         
                         if one_to_many:
                             triple_keys = list(schema_items.keys())
-                            for triple in triple_dict:
-                                # get the three keys
-                                # For one-to-many triple, We cannot ensure either "Relation" or "relation" is always exist for edge name, but we can check if it exist
-                                entity_keys = []
-                                relation = None
-                                for key in triple_keys:
-                                    if key not in ["Relation", "relation"]:
-                                        entity_keys.append(key)
-                                    else:
-                                        relation = triple[key]
-                                if relation is None:
-                                    relation = "is participated by"
-                                assert len(entity_keys) == 2, f"One-to-many triple schema must have exactly two entities: {entity_keys}"    
+                            entity_keys = []
+                            relation = None
+                            # get the three keys
+                            # For one-to-many triple, We cannot ensure either "Relation" or "relation" is always exist for edge name, but we can check if it exist
+                            
+                            for key in triple_keys:
                                 # check if it is relation or Relation for relation key
+                                if key not in ["Relation", "relation"]:
+                                    entity_keys.append(key)
+                                else:
+                                    relation = triple[key]
+                            if relation is None:
+                                relation = "is participated by"
+                            assert len(entity_keys) == 2, f"One-to-many triple schema must have exactly two entities: {entity_keys}"  
+                            for triple in triple_dict:
                                 many_entity = None
                                 many_entity_key = None
+                                many_entity_node_type = None
                                 for key in entity_keys:
                                     if type(triple[key]) == list:
                                         many_entity = triple[key]
                                         many_entity_key = key
+                                        many_entity_node_type = schema_items[key]['node_type'] if 'node_type' in schema_items[key] else 'entity'
                                         break
                                 one_entity = None
+                                one_entity_node_type = None
                                 for key in entity_keys:
                                     if key != many_entity_key:
                                         one_entity = triple[key]
+                                        one_entity_node_type = schema_items[key]['node_type'] if 'node_type' in schema_items[key] else 'event'
                                 if many_entity is None or one_entity is None or relation is None:
                                     continue
                                 if one_entity.isspace() or relation.isspace():
@@ -178,7 +186,7 @@ def custom_schema_json_2_csv(dataset, data_dir, output_dir, schema):
                                 if one_entity not in visited_nodes:
                                     visited_nodes.add(one_entity)
                                     all_events.add(one_entity)
-                                    writer_node.writerow([one_entity, "event", [], [], "Node"])
+                                    writer_node.writerow([one_entity, one_entity_node_type, [], [], "Node"])
                                     csv_writer_edge_text.writerow([head_entity, text_hash_id, "Source"])
 
                                 for entity in many_entity:
@@ -187,7 +195,7 @@ def custom_schema_json_2_csv(dataset, data_dir, output_dir, schema):
                                     if entity not in visited_nodes:
                                         visited_nodes.add(entity)
                                         all_entities.add(entity)
-                                        writer_node.writerow([entity, "entity", [], [], "Node"])
+                                        writer_node.writerow([entity, many_entity_node_type, [], [], "Node"])
                                         csv_writer_edge_text.writerow([entity, text_hash_id, "Source"])
 
                                     all_relations.add(relation)
