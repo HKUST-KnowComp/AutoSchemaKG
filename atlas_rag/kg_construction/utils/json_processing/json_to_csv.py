@@ -168,7 +168,7 @@ def custom_schema_json_2_csv(dataset, data_dir, output_dir, schema):
                                     if type(triple[key]) == list:
                                         many_entity = triple[key]
                                         many_entity_key = key
-                                        many_entity_node_type = schema_items[key]['node_type'] if 'node_type' in schema_items[key] else 'entity'
+                                        many_entity_node_type = schema_items[key]['items']['node_type'] if 'node_type' in schema_items[key]['items'] else 'entity'
                                         break
                                 one_entity = None
                                 one_entity_node_type = None

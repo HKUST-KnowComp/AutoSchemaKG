@@ -22,7 +22,8 @@ You can define multiple keys (e.g., `"triple_extraction"`, `"time_extraction"`) 
   "en": {
     "system": "You are a helpful assistant",
     "triple_extraction": "You are an expert knowledge graph constructor.\nYour task is to extract factual information from the provided text and represent it strictly as a ***JSON array*** of knowledge graph triples.\n\n### Output Format\n- The output must be a **JSON array**.\n- Each element in the array must be a **JSON object** with exactly three non-empty keys:\n  - \"subject\": the main entity, concept, event, or attribute.\n  - \"relation\": a concise, descriptive phrase or verb that describes the relationship.\n  - \"object\": the entity, concept, value, event, or attribute that the subject has a relationship with.\n\n### Constraints\n- **Do not include any text other than the JSON output.**\n- Extract **all possible and relevant triples**.\n- If no triples can be extracted, return exactly: `[]`.",
-    "time_extraction": "You are an expert in temporal extraction..."
+    "event_entity_extraction": "You are an expert in event entity extraction...",
+    "event_event_extraction": "You are an expert in event-event relation extraction..."
   }
 }
 ```
@@ -33,31 +34,48 @@ Create a JSON schema file (e.g., `custom_schema.json`) to enforce the structure 
 
 **Important**: If you defined multiple extraction keys in your `custom_prompt.json` (e.g., `"triple_extraction"`, `"time_extraction"`), you must provide a corresponding schema for **each** key in this file.
 
+(Caution: Retrievers may not handle node_type other than "entity", "event", or "concept" properly. Custom node types are set for custom use cases but may not be fully supported in all components in atlas-rag.)
+
 **Example `custom_schema.json`:**
 
 ```json
-{
+{   
+    // One-to-one example schema
     "triple_extraction": {
         "type": "array",
         "items": {
             "type": "object",
             "properties": {
-                "subject": { "type": "string" },
+                "subject": { "type": "string", "node_type": "entity" },
                 "relation": { "type": "string" },
-                "object": { "type": "string" }
+                "object": { "type": "string", "node_type": "entity" }
             },
             "required": ["subject", "relation", "object"]
         }
     },
-    "time_extraction": {
+    // One-to-many example schema (event-to-entities)
+    "event_entity_extraction": { 
         "type": "array",
         "items": {
             "type": "object",
             "properties": {
-                "event": { "type": "string" },
-                "timestamp": { "type": "string" }
+                "event": { "type": "string", "node_type": "event" },
+                "entity": { "type": "array", "items": { "type": "string", "node_type": "entity" } },
             },
-            "required": ["event", "timestamp"]
+            "required": ["event", "entity"]
+        }
+    },
+
+    "event_event_extraction": { 
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "event1": { "type": "string", "node_type": "event" },
+                "relation": { "type": "string" },
+                "event2": { "type": "string", "node_type": "event" }
+            },
+            "required": ["event1", "relation", "event2"]
         }
     }
 }
