@@ -34,7 +34,7 @@ Create a JSON schema file (e.g., `custom_schema.json`) to enforce the structure 
 
 **Important**: If you defined multiple extraction keys in your `custom_prompt.json` (e.g., `"triple_extraction"`, `"time_extraction"`), you must provide a corresponding schema for **each** key in this file.
 
-(Caution: Retrievers may not handle node_type other than "entity", "event", or "concept" properly. Custom node types are set for custom use cases but may not be fully supported in all components in atlas-rag.)
+(Caution: Shcema Induction (Concept Generation) and retrievers may not handle node_type other than "entity" or "event" properly. Custom node types are set for custom use cases but may not be fully supported in all components in atlas-rag.)
 
 **Example `custom_schema.json`:**
 
