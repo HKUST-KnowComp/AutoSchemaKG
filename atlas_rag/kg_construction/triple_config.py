@@ -30,3 +30,6 @@ class ProcessingConfig:
     repetition_penalty: float = None
     # for benchmarking the gpu-hour of first 100 document
     benchmark : bool = False
+    # Text chunking parameters
+    chunk_size: int = 8192  # Maximum characters per chunk
+    chunk_overlap: int = 0   # Optional: overlap between chunks for context preservation

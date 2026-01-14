@@ -15,6 +15,8 @@ Each line is a JSON object representing a document.
 {"id": "title_2", "text": "Another document content...", "metadata": {"lang": "en"}}
 ```
 
+> **Multilingual Support:** AutoSchemaKG supports multiple languages (English, Simplified Chinese, Traditional Chinese) out of the box, with the ability to add custom languages. See the [Multilingual Support Guide](../example/multilingual_support.md) for details on using built-in languages and creating custom language prompts.
+
 **Directory of Text Files:**
 You can also point `data_directory` to a folder containing `.txt` or `.md` files. The filename is often used as the document ID.
 

@@ -16,6 +16,8 @@ from datasets import load_dataset
 from collections import defaultdict
 from tqdm import tqdm
 import json_repair
+import copy
+
 from atlas_rag.llm_generator import LLMGenerator
 from atlas_rag.kg_construction.utils.json_processing.json_to_csv import json2csv
 from atlas_rag.kg_construction.concept_generation import generate_concept
@@ -28,56 +30,86 @@ from atlas_rag.vectorstore.create_neo4j_index import create_faiss_index
 from atlas_rag.kg_construction.triple_config import ProcessingConfig
 from atlas_rag.llm_generator.prompt.triple_extraction_prompt import TRIPLE_INSTRUCTIONS
 from atlas_rag.llm_generator.format.validate_json_schema import ATLAS_SCHEMA
-# Constants
-TOKEN_LIMIT = 4096
-INSTRUCTION_TOKEN_ESTIMATE = 200
-CHAR_TO_TOKEN_RATIO = 3.5
  
 # Prompt instructions and schema, will be modified during the initialization of KnowledgeGraphExtractor according to the config if provided
-PROMPT_INSTRUCTIONS = TRIPLE_INSTRUCTIONS
-RESULT_SCHEMA = ATLAS_SCHEMA
 
 class TextChunker:
-    """Handles text chunking based on token limits."""
+    """Handles text chunking based on character limits."""
     
-    def __init__(self, max_tokens: int = TOKEN_LIMIT, instruction_tokens: int = INSTRUCTION_TOKEN_ESTIMATE):
-        self.max_tokens = max_tokens
-        self.instruction_tokens = instruction_tokens
-        self.char_ratio = CHAR_TO_TOKEN_RATIO
+    def __init__(self, config: ProcessingConfig):
+        self.chunk_size = config.chunk_size
+        self.chunk_overlap = config.chunk_overlap
         
-    def calculate_max_chars(self) -> int:
-        """Calculate maximum characters per chunk."""
-        available_tokens = self.max_tokens - self.instruction_tokens
-        return int(available_tokens * self.char_ratio)
+        if self.chunk_size <= 0:
+            raise ValueError(f"chunk_size must be positive, got {self.chunk_size}")
+        
+        if self.chunk_overlap >= self.chunk_size:
+            raise ValueError(
+                f"chunk_overlap ({self.chunk_overlap}) must be less than "
+                f"chunk_size ({self.chunk_size})"
+            )
     
     def split_text(self, text: str) -> List[str]:
-        """Split text into chunks that fit within token limits."""
-        max_chars = self.calculate_max_chars()
+        if not text:
+            return []
+        
+        # 1. Split text into words first to avoid cutting inside a word
+        words = text.split(' ')
         chunks = []
+        current_chunk = []
+        current_length = 0
         
-        while len(text) > max_chars:
-            chunks.append(text[:max_chars])
-            text = text[max_chars:]
-        
-        if text:  # Add remaining text
-            chunks.append(text)
+        for word in words:
+            # +1 for the space we removed during split
+            word_len = len(word) + 1 
+            
+            # If adding this word exceeds chunk size, save the current chunk
+            if current_length + word_len > self.chunk_size:
+                if current_chunk:
+                    chunks.append(" ".join(current_chunk))
+                    
+                    # LOGIC FOR OVERLAP:
+                    # Keep the last N words that fit within the overlap limit
+                    # This is harder to do perfectly with simple loops.
+                    # Usually, we start a new chunk with the current word.
+                    
+                    # Simplified overlap approach (Keep last X words roughly):
+                    overlap_len = 0
+                    new_start_index = len(current_chunk)
+                    
+                    # Walk backwards to find how many words fit in the overlap
+                    while new_start_index > 0 and overlap_len < self.chunk_overlap:
+                        new_start_index -= 1
+                        overlap_len += len(current_chunk[new_start_index]) + 1
+                    
+                    current_chunk = current_chunk[new_start_index:]
+                    current_length = overlap_len
+            
+            current_chunk.append(word)
+            current_length += word_len
+            
+        # Add the last chunk
+        if current_chunk:
+            chunks.append(" ".join(current_chunk))
             
         return chunks
 
 class DatasetProcessor:
     """Processes and prepares dataset for knowledge graph extraction."""
     
-    def __init__(self, config: ProcessingConfig):
+    def __init__(self, config: ProcessingConfig, prompt_instructions: Dict, result_schema: Dict):
         self.config = config
-        self.chunker = TextChunker()
+        self.chunker = TextChunker(config)
         self.benchmark = config.benchmark
         self.deduplicate_text = config.deduplicate_text
+        self.prompt_instructions = prompt_instructions
+        self.result_schema = result_schema
 
     def filter_language_content(self, sample: Dict[str, Any]) -> bool:
         """Check if content is in English."""
         metadata = sample.get("metadata", {})
         language = metadata.get("lang", "en")  # Default to English if not specified
-        supported_languages = list(PROMPT_INSTRUCTIONS.keys())
+        supported_languages = list(self.prompt_instructions.keys())
         return language in supported_languages
     
     
@@ -163,28 +195,30 @@ class DatasetProcessor:
 class CustomDataLoader:
     """Custom data loader for knowledge graph extraction."""
     
-    def __init__(self, dataset, processor: DatasetProcessor):
+    def __init__(self, dataset, processor: DatasetProcessor, prompt_instructions: Dict, result_schema: Dict):
         self.raw_dataset = dataset
         self.processor = processor
         self.processed_data = processor.prepare_dataset(dataset)
+        self.prompt_instructions = prompt_instructions
+        self.result_schema = result_schema
         self.stage_to_prompt_dict = {
             "stage_1": "entity_relation",
             "stage_2": "event_entity",
             "stage_3": "event_relation"
         }
-        
+
     def __len__(self) -> int:
         return len(self.processed_data)
     
     def create_batch_instructions(self, batch_data: List[Dict[str, Any]]) -> List[str]:
-        messages_dict = {key: [] for key in RESULT_SCHEMA.keys()}
+        messages_dict = {key: [] for key in self.result_schema.keys()}
         for item in batch_data:
             # get language
             language = item.get("metadata",{}).get("lang", "en")
-            system_msg = PROMPT_INSTRUCTIONS.get(language, PROMPT_INSTRUCTIONS["en"])['system'] 
+            system_msg = self.prompt_instructions.get(language, self.prompt_instructions["en"])['system'] 
 
-            for key in RESULT_SCHEMA.keys():
-                stage_msg = PROMPT_INSTRUCTIONS.get(language, PROMPT_INSTRUCTIONS["en"])[key] + '\n' + item["text"]
+            for key in self.result_schema.keys():
+                stage_msg = self.prompt_instructions.get(language, self.prompt_instructions["en"])[key] + '\n' + item["text"]
                 messages_dict[key].append([
                     {"role": "system", "content": system_msg},
                     {"role": "user", "content": stage_msg}
@@ -232,6 +266,11 @@ class KnowledgeGraphExtractor:
         self.model = model
         self.model_name = model.model_name
         self.parser = OutputParser()        
+
+        # Create instance-specific copies of defaults
+        self.prompt_instructions = copy.deepcopy(TRIPLE_INSTRUCTIONS)
+        self.result_schema = copy.deepcopy(ATLAS_SCHEMA)
+        
         # check both prompt and schema is provided if one of them is provided
         self.custom_prompt = None
         self.custom_schema = None
@@ -239,11 +278,13 @@ class KnowledgeGraphExtractor:
             assert self.config.triple_extraction_schema_path is not None, "Schema path must be provided if prompt path is provided"
             with open(self.config.triple_extraction_prompt_path, 'r') as f:
                 self.custom_prompt = json_repair.loads(f.read())
+            self.prompt_instructions = self.custom_prompt
             print(f"Using custom kg extraction prompt:\n{self.custom_prompt}")
         if self.config.triple_extraction_schema_path is not None:
             assert self.config.triple_extraction_prompt_path is not None, "Prompt path must be provided if schema path is provided"
             with open(self.config.triple_extraction_schema_path, 'r') as f:
                 self.custom_schema = json_repair.loads(f.read())
+            self.result_schema = self.custom_schema 
             print(f"Using custom kg extraction schema:\n{self.custom_schema}")
 
             # validate one-to-one and one-to-many triple schema
@@ -260,10 +301,9 @@ class KnowledgeGraphExtractor:
                 if one_to_one:
                     assert len(triples) == 3, "One-to-one triple schema must have exactly three fields: subject, relation, object"
 
-            global RESULT_SCHEMA
-            RESULT_SCHEMA = self.custom_schema
-            global PROMPT_INSTRUCTIONS
-            PROMPT_INSTRUCTIONS = self.custom_prompt
+    def set_model(self, model:LLMGenerator):
+        """Set or update the LLM model."""
+        self.model = model
 
     def load_dataset(self) -> Any:
         """Load and prepare dataset."""
@@ -347,8 +387,8 @@ class KnowledgeGraphExtractor:
             print("Debug mode: Processing only 20 samples")
         
         # Create data processor and loader
-        processor = DatasetProcessor(self.config)
-        data_loader = CustomDataLoader(dataset["train"], processor)
+        processor = DatasetProcessor(self.config, self.prompt_instructions, self.result_schema)
+        data_loader = CustomDataLoader(dataset["train"], processor, self.prompt_instructions, self.result_schema)
         
         output_file = self.create_output_filename()
         print(f"Model: {self.config.model_path}")
@@ -365,7 +405,7 @@ class KnowledgeGraphExtractor:
                     stage_outputs = {}
                     result_keys = list(messages_dict.keys())
                     for key in result_keys:
-                        batch_result = self.process_stage(messages_dict[key], result_schema = RESULT_SCHEMA[key])
+                        batch_result = self.process_stage(messages_dict[key], result_schema = self.result_schema[key])
                         # each batch_result is (llm_rawoutput, triple-dict), and at the same time llm_rawoutput can be (llm_rawoutput, llm_usage)
                         
                         stage_outputs[key] = batch_result
@@ -416,7 +456,7 @@ class KnowledgeGraphExtractor:
             dataset = self.config.filename_pattern, 
             output_dir=f"{self.config.output_directory}/triples_csv",
             data_dir=f"{self.config.output_directory}/kg_extraction",
-            schema = RESULT_SCHEMA,
+            schema = self.result_schema,
             custom = self.custom_schema != None
         )
         csvs_to_temp_graphml(
