@@ -60,6 +60,7 @@ Create a JSON schema file (e.g., `custom_schema.json`) to enforce the structure 
             "type": "object",
             "properties": {
                 "event": { "type": "string", "node_type": "event" },
+                // relation can be added if needed for scehma validation
                 "entity": { "type": "array", "items": { "type": "string", "node_type": "entity" } },
             },
             "required": ["event", "entity"]

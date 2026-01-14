@@ -257,17 +257,3 @@ When creating custom language prompts, follow this structure:
 3. **JSON Format**: Ensure your prompts explicitly request JSON output format
 4. **Examples**: Include few-shot examples in your target language when possible
 5. **Language Models**: Use multilingual or language-specific models for best results (e.g., Qwen for Chinese, GPT-4 for general multilingual support)
-
-## Troubleshooting
-
-**Issue**: System defaults to English despite metadata
-- **Solution**: Verify `metadata.lang` is correctly specified in your JSON files
-
-**Issue**: Concept generation fails for custom language
-- **Solution**: Ensure you've specified the language parameter explicitly: `generate_concept_csv_temp(language='ja')`
-
-**Issue**: Custom prompts not being used
-- **Solution**: Check that `triple_extraction_prompt_path` points to the correct file path
-
-**Issue**: Poor extraction quality in custom language
-- **Solution**: Refine your prompts with more specific instructions and examples in the target language

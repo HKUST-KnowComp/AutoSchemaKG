@@ -83,7 +83,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#example-files">Example Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tips-for-custom-languages">Tips for Custom Languages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -382,25 +381,6 @@
 <li><p><strong>Examples</strong>: Include few-shot examples in your target language when possible</p></li>
 <li><p><strong>Language Models</strong>: Use multilingual or language-specific models for best results (e.g., Qwen for Chinese, GPT-4 for general multilingual support)</p></li>
 </ol>
-</section>
-<section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
-<p><strong>Issue</strong>: System defaults to English despite metadata</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Verify <code class="docutils literal notranslate"><span class="pre">metadata.lang</span></code> is correctly specified in your JSON files</p></li>
-</ul>
-<p><strong>Issue</strong>: Concept generation fails for custom language</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Ensure you’ve specified the language parameter explicitly: <code class="docutils literal notranslate"><span class="pre">generate_concept_csv_temp(language='ja')</span></code></p></li>
-</ul>
-<p><strong>Issue</strong>: Custom prompts not being used</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Check that <code class="docutils literal notranslate"><span class="pre">triple_extraction_prompt_path</span></code> points to the correct file path</p></li>
-</ul>
-<p><strong>Issue</strong>: Poor extraction quality in custom language</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Refine your prompts with more specific instructions and examples in the target language</p></li>
-</ul>
 </section>
 </section>
 
