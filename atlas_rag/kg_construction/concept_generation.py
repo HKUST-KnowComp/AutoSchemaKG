@@ -209,11 +209,11 @@ def generate_concept(model: LLMGenerator,
 
                     if len(entity_predecessors) > 0:
                         random_two_neighbors = random.sample(entity_predecessors, min(1, len(entity_predecessors)))
-                        context += ", ".join([f"{temp_kg.nodes[neighbor]['id']} {temp_kg[neighbor][node_id]['relation']}" for neighbor in random_two_neighbors])
+                        context += ", ".join([f"{temp_kg.nodes[neighbor].get('id', 'unknown')} {temp_kg[neighbor][node_id]['relation']}" for neighbor in random_two_neighbors])
                     
                     if len(entity_successors) > 0:
                         random_two_neighbors = random.sample(entity_successors, min(1, len(entity_successors)))
-                        context += ", ".join([f"{temp_kg[node_id][neighbor]['relation']} {temp_kg.nodes[neighbor]['id']}" for neighbor in random_two_neighbors])
+                        context += ", ".join([f"{temp_kg[node_id][neighbor]['relation']} {temp_kg.nodes[neighbor].get('id', 'unknown')}" for neighbor in random_two_neighbors])
                     
                     prompt = template.replace(replace_token, node).replace(replace_context_token, context)
                 else:

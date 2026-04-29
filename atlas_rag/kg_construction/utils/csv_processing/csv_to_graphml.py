@@ -26,8 +26,10 @@ def sanitize_xml_string(s: str) -> str:
     return _ILLEGAL_XML_RE.sub("", s)
 
 
-def get_node_id(entity_name, entity_to_id={}):
+def get_node_id(entity_name, entity_to_id=None):
     """Returns existing or creates new nX ID for an entity using a hash-based approach."""
+    if entity_to_id is None:
+        entity_to_id = {}
     if entity_name not in entity_to_id:
         # Use a hash function to generate a unique ID
         entity_name = entity_name+'_entity'
@@ -57,6 +59,11 @@ def csvs_to_temp_graphml(triple_node_file, triple_edge_file, config:ProcessingCo
         for row in reader:
             start_id = get_node_id(row[":START_ID"], entity_to_id)
             end_id = get_node_id(row[":END_ID"], entity_to_id)
+            # Ensure referenced nodes exist (prevent silent orphan creation by add_edge)
+            for node_id, name in [(start_id, row[":START_ID"]), (end_id, row[":END_ID"])]:
+                if node_id not in g.nodes:
+                    print(f"Warning: Node '{name}' referenced in edge but missing from node CSV. Adding as type='Unknown'.")
+                    g.add_node(node_id, id=name, type="Unknown")
             # Check if edge already exists to prevent duplicates
             if not g.has_edge(start_id, end_id):
                 g.add_edge(start_id, end_id, relation=row["relation"], type=row[":TYPE"])
@@ -175,10 +182,15 @@ def csvs_to_graphml(triple_node_file, text_node_file, triple_edge_file, text_edg
         for row in reader:
             start_id = get_node_id(row[":START_ID"], entity_to_id)
             end_id = get_node_id(row[":END_ID"], entity_to_id)
+            # Ensure referenced nodes exist (prevent silent orphan creation by add_edge)
+            for node_id, name in [(start_id, row[":START_ID"]), (end_id, row[":END_ID"])]:
+                if node_id not in g.nodes:
+                    print(f"Warning: Node '{name}' referenced in edge but missing from node CSV. Adding as type='Unknown'.")
+                    g.add_node(node_id, id=safe_sanitize(name), type="Unknown")
             # Check if edge already exists to prevent duplicates
             if not g.has_edge(start_id, end_id):
-                g.add_edge(start_id, end_id, 
-                          relation=safe_sanitize(row["relation"]), 
+                g.add_edge(start_id, end_id,
+                          relation=safe_sanitize(row["relation"]),
                           type=safe_sanitize(row[":TYPE"]))
                 # Add file_id to start and end nodes if they are triple or concept nodes
                 for node_id in [start_id, end_id]:
