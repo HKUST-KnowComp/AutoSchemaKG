@@ -44,7 +44,7 @@ def compute_text_embeddings(text_list, sentence_encoder: BaseEmbeddingModel, bat
         embeddings = sentence_encoder.encode(batch, normalize_embeddings=normalize_embeddings)
         if isinstance(embeddings, torch.Tensor):
             embeddings = embeddings.cpu().numpy()
-        text_embeddings.extend(sentence_encoder.encode(batch, normalize_embeddings = normalize_embeddings))
+        text_embeddings.extend(embeddings)
     return text_embeddings
 
 def create_embeddings_and_index(sentence_encoder, model_name: str, working_directory: str, keyword: str, include_events: bool, include_concept: bool,

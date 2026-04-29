@@ -37,6 +37,8 @@ if __name__ == "__main__":
         output_directory=f'/data/httsangaj/atlas/rebuttal/{keyword}_reconstruct/{model_name}',
         current_shard_triple=args.shard,
         total_shards_triple=args.total_shards,
+        current_shard_concept=args.shard,
+        total_shards_concept=args.total_shards,
         record=False,
         max_new_tokens=16384,
         benchmark=False,

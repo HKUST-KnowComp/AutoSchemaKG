@@ -107,11 +107,9 @@ def load_data_with_shard(input_file, shard_idx, num_shards):
     with open(input_file, "r") as f:
         csv_reader = list(csv.reader(f))
     
-    # data = csv_reader  
+    # data = csv_reader
     data = csv_reader[1:]
-    # Random shuffle the data before splitting into shards
-    random.shuffle(data)
-    
+
     total_lines = len(data)
     lines_per_shard = (total_lines + num_shards - 1) // num_shards
     start_idx = shard_idx * lines_per_shard
